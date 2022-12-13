@@ -1,7 +1,10 @@
 require 'json-schema'
 class SubscribeController < ApplicationController
+  respond_to? :js
   def create
-    @subscribe = Subscribe.new(create_subscribe_body)
+    @validation_result = validate_post_body
+    render json: => @validation_result
+    # render json: { 'msg': 'SUBSCRIBE_CREATED' }
   end
 
   def update; end
@@ -16,7 +19,7 @@ class SubscribeController < ApplicationController
 
   private
 
-  def post_body
+  def validate_post_body
     body_schema = {
       'type' => 'object',
       'required' => %w[bus_number station direction minutes_before],
@@ -28,6 +31,15 @@ class SubscribeController < ApplicationController
       },
       'additionalProperties' => true
     }
-    JSON.validate(body_schema, request.raw_post)
+    begin
+      if JSON::Validator.validate(body_schema, request.raw_post)
+        puts request.raw_post
+      else
+        puts json: { 'err': 'JSON_VALIDATION_FAILED' }, status: 400
+      end
+    rescue JSON::Schema::ValidationError => e
+      e.message
+      puts json: { 'err': 'JSON_VALIDATION_ERROR' }, status: 500
+    end
   end
 end
