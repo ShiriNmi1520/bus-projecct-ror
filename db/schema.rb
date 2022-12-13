@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_11_185011) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_13_052042) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "buses", force: :cascade do |t|
@@ -24,7 +25,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_11_185011) do
     t.index ["bus_id"], name: "index_buses_on_bus_id"
   end
 
-  create_table "subscribes", force: :cascade do |t|
+  create_table "subscribes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "integer_id"
     t.string "subscribe_id"
     t.string "email"
     t.string "client_id"

@@ -53,3 +53,6 @@ gem 'rails_param'
 # Validate request JSON body
 gem 'json-schema'
 
+# Generate uuid
+gem 'securerandom'
+
