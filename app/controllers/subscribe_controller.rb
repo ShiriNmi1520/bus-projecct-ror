@@ -4,8 +4,12 @@ class SubscribeController < ApplicationController
   respond_to? :js
   def create
     @validation_result = validate_post_body
-    render @validation_result
-    # render json: { 'msg': 'SUBSCRIBE_CREATED' }
+    if @validation_result.as_json['status'] != 200
+      render @validation_result
+    else
+      @subscribe_result = Subscribe.new(request.raw_post)
+      render json: { 'msg': 'SUBSCRIBE_CREATED' }
+    end
   end
 
   def update; end
