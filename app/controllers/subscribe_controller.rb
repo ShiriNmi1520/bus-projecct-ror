@@ -1,9 +1,10 @@
 require 'json-schema'
+require 'json'
 class SubscribeController < ApplicationController
   respond_to? :js
   def create
     @validation_result = validate_post_body
-    render json: => @validation_result
+    render @validation_result
     # render json: { 'msg': 'SUBSCRIBE_CREATED' }
   end
 
@@ -33,13 +34,13 @@ class SubscribeController < ApplicationController
     }
     begin
       if JSON::Validator.validate(body_schema, request.raw_post)
-        puts request.raw_post
+        { json: request.raw_post, status: 200 }
       else
-        puts json: { 'err': 'JSON_VALIDATION_FAILED' }, status: 400
+        { json: { 'err': 'JSON_VALIDATION_FAILED' }, status: 400 }
       end
     rescue JSON::Schema::ValidationError => e
       e.message
-      puts json: { 'err': 'JSON_VALIDATION_ERROR' }, status: 500
+      { json: { 'err': 'JSON_VALIDATION_ERROR' }, status: 500 }
     end
   end
 end
