@@ -67,7 +67,7 @@ class SubscribeController < ApplicationController
   def validate_update_body
     body_schema = {
       'type' => 'object',
-      'required' => %w[],
+      'required' => %w[subscribe_id],
       'properties' => {
         'subscribe_id' => { 'type' => 'uuid' },
         'email' => { 'type' => 'string' },
