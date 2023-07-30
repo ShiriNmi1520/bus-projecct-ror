@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  post 'subscribe/create'
+  put 'subscribe/update'
+  get 'subscribe/list'
+  delete 'subscribe/delete'
   get 'bus/info'
   put 'bus/update'
   post 'bus/fetch'
